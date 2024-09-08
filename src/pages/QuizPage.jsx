@@ -49,8 +49,17 @@ export default function QuizPage() {
     fetchData();
   }, [searchParams, quizId]);
 
+  const decodeHtmlEntities = (text) => {
+    const parser = new DOMParser();
+    const decodedString = parser.parseFromString(text, 'text/html').body
+      .textContent;
+    return decodedString;
+  };
+
   const title =
-    quizData.length > 0 ? quizData[currentQuestion - 1].category : '';
+    quizData.length > 0
+      ? decodeHtmlEntities(quizData[currentQuestion - 1].category)
+      : '';
   const image = useContext(quizDataContext).find(
     (obj) => obj.id == quizId
   ).image;
@@ -72,7 +81,7 @@ export default function QuizPage() {
           isCorrectAnswer={correctAnswer === option ? true : false}
           showAnswer={showAnswer}
         >
-          {option}
+          {decodeHtmlEntities(option)}
         </Option>
       );
     });
@@ -146,7 +155,7 @@ export default function QuizPage() {
               </div>
               <div id="question" className="mt-4">
                 <p className="text-lg md:text-2xl md:font-semibold">
-                  {quizData[currentQuestion - 1].question}
+                  {decodeHtmlEntities(quizData[currentQuestion - 1].question)}
                 </p>
               </div>
               <ProgressBar currWidth={currentQuestion} />
