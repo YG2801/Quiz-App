@@ -1,12 +1,15 @@
-import { useEffect, useState, useContext } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import Confetti from "react-confetti";
-import { ProgressBar } from "../components/MasterComponent";
-import { Option } from "../components/MasterComponent";
-import { Button } from "../components/MasterComponent";
-import { ErrorBox } from "../components/MasterComponent";
-import { QuizCompletedComponent } from "../components/MasterComponent";
-import { quizDataContext } from "../App";
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import Confetti from 'react-confetti';
+import {
+  ProgressBar,
+  Option,
+  Button,
+  ErrorBox,
+  QuizCompletedComponent,
+  Loader,
+} from '../components/MasterComponent';
+import { quizDataContext } from '../App';
 
 export default function QuizPage() {
   const [currentQuestion, setCurrentQuestion] = useState(1);
@@ -17,7 +20,7 @@ export default function QuizPage() {
   const [quizCompleted, setQuizCompleted] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
-  const quizId = searchParams.get("id");
+  const quizId = searchParams.get('id');
 
   const [quizData, setQuizData] = useState([]);
   const [randomIndex, setRandomIndex] = useState(generateRandomIndex());
@@ -31,9 +34,9 @@ export default function QuizPage() {
     async function fetchData() {
       try {
         const response = await fetch(
-          `https://opentdb.com/api.php?amount=10&type=multiple&difficulty=easy&category=${quizId}`,
+          `https://opentdb.com/api.php?amount=10&type=multiple&difficulty=easy&category=${quizId}`
         );
-        if (!response.ok) throw new Error("Failed to fetch data");
+        if (!response.ok) throw new Error('Failed to fetch data');
         const dt = await response.json();
         setQuizData(dt.results);
         console.log(dt.results[0].question);
@@ -47,9 +50,9 @@ export default function QuizPage() {
   }, [searchParams, quizId]);
 
   const title =
-    quizData.length > 0 ? quizData[currentQuestion - 1].category : "";
+    quizData.length > 0 ? quizData[currentQuestion - 1].category : '';
   const image = useContext(quizDataContext).find(
-    (obj) => obj.id == quizId,
+    (obj) => obj.id == quizId
   ).image;
 
   function generateOptions() {
@@ -103,24 +106,21 @@ export default function QuizPage() {
 
   const navigate = useNavigate();
   function handlePlayAgain() {
-    navigate("/");
+    navigate('/');
   }
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <Loader />;
   if (quizData.length === 0) return <div>No data found</div>;
 
   return (
     <>
       {error && <ErrorBox setError={setError} />}
       {score === 10 && <Confetti />}
-      <div className="px-4 py-3 md:absolute md:left-1/2 md:top-1/2 md:w-[750px] md:-translate-x-1/2 md:-translate-y-1/2">
+      <div className="px-4 py-3 md:absolute md:left-1/2 md:top-1/2 md:w-[90%] md:max-w-[900px] md:-translate-x-1/2 md:-translate-y-1/2">
         <div className="flex items-center gap-4">
           <div className="size-10">
             <img src={image} alt="" className="size-full object-cover" />
           </div>
-          <p
-            className="font-semibold md:text-xl"
-            dangerouslySetInnerHTML={{ __html: title }}
-          ></p>
+          <p className="font-semibold md:text-xl">{title}</p>
         </div>
         {quizCompleted ? (
           <QuizCompletedComponent
@@ -131,7 +131,7 @@ export default function QuizPage() {
             handlePlayAgain={handlePlayAgain}
           />
         ) : (
-          <div className="mt-12 md:flex md:gap-4">
+          <div className="mt-12 md:flex md:gap-12">
             <div className="md:shrink-0 md:basis-1/2">
               <div>
                 <p className="italic text-slate-400 md:text-lg">
@@ -139,12 +139,9 @@ export default function QuizPage() {
                 </p>
               </div>
               <div id="question" className="mt-4">
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: quizData[currentQuestion - 1].question,
-                  }}
-                  className="text-lg md:text-2xl md:font-semibold"
-                ></p>
+                <p className="text-lg md:text-2xl md:font-semibold">
+                  {quizData[currentQuestion - 1].question}
+                </p>
               </div>
               <ProgressBar currWidth={currentQuestion} />
             </div>

@@ -1,4 +1,4 @@
-import { Button } from "./MasterComponent";
+import { Button } from './MasterComponent';
 
 export default function QuizCompletedComponent({
   score,

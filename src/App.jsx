@@ -1,6 +1,6 @@
-import { createContext } from "react";
-import { Outlet } from "react-router-dom";
-import categories from "../data";
+import { createContext } from 'react';
+import { Outlet } from 'react-router-dom';
+import categories from '../data';
 
 const quizDataContext = createContext();
 
