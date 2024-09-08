@@ -109,7 +109,13 @@ export default function QuizPage() {
     navigate('/');
   }
   if (loading) return <Loader />;
-  if (quizData.length === 0) return <div>No data found</div>;
+  if (quizData.length === 0)
+    return (
+      <div className="flex flex-col h-screen justify-center items-center text-lg font-medium px-4 text-center">
+        <p>Failed to fetch data</p>
+        <p>Please retry</p>
+      </div>
+    );
 
   return (
     <>
